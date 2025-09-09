@@ -1,7 +1,18 @@
 console.log("JS file loaded");
 
 let originalJSONText = "";
-let currentConfig = {};
+let currentConfig = [];
+
+const fieldMap = {
+    "ONU_Name": ["name"],
+    "ONU_Serial": ["serial"],
+    "PPPoE_Username": ["routerMode", "pppoeUser"],
+    "PPPoE_Password": ["routerMode", "pppoePassword"],
+    "WiFi_2.4_SSID": ["wifi", "networks", 0, "ssid"],
+    "WiFi_2.4_Password": ["wifi", "networks", 0, "key"],
+    "WiFi_5_SSID": ["wifi5g", "networks", 0, "ssid"],
+    "WiFi_5_Password": ["wifi5g", "networks", 0, "key"]
+};
 
 const fieldGroups = {
     "ONU Info": ["ONU_Name", "ONU_Serial"],
@@ -10,6 +21,20 @@ const fieldGroups = {
 };
 
 const fieldsToPrompt = Object.values(fieldGroups).flat();
+
+// Helpers
+function getNestedValue(obj, path) {
+    return path.reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : ""), obj);
+}
+
+function setNestedValue(obj, path, value) {
+    let target = obj;
+    for (let i = 0; i < path.length - 1; i++) {
+        if (!(path[i] in target)) target[path[i]] = {};
+        target = target[path[i]];
+    }
+    target[path[path.length - 1]] = value;
+}
 
 // Load uploaded JSON
 function loadUploadedConfig() {
@@ -32,18 +57,16 @@ function loadUploadedConfig() {
             originalJSONText = e.target.result;
             currentConfig = JSON.parse(originalJSONText);
 
-            fieldsToPrompt.forEach(key => {
-                if (!(key in currentConfig)) currentConfig[key] = "";
-            });
+            if (!Array.isArray(currentConfig) || !currentConfig[0]) {
+                throw new Error("Config must be an array with one object");
+            }
 
             statusDiv.innerText = "Config loaded successfully!";
-            generateForm(currentConfig);
+            generateForm(currentConfig[0]);
             document.getElementById("downloadBtn").style.display = "inline-block";
-
-            // Show preview card
             document.getElementById("previewCard").style.display = "block";
-            updatePreviewCard();
 
+            updatePreviewCard();
             validateForm();
         } catch (err) {
             statusDiv.innerText = "Error parsing JSON: " + err.message;
@@ -54,8 +77,8 @@ function loadUploadedConfig() {
     reader.readAsText(file);
 }
 
-// Generate grouped collapsible form with validation messages
-function generateForm(config) {
+// Generate grouped collapsible form
+function generateForm(configObj) {
     const formDiv = document.getElementById("configForm");
     formDiv.innerHTML = "";
 
@@ -78,10 +101,9 @@ function generateForm(config) {
 
             const input = document.createElement("input");
             input.type = "text";
-            input.value = config[key];
+            input.value = getNestedValue(configObj, fieldMap[key]);
             input.id = "input_" + key;
 
-            // Validation message span
             const validationMsg = document.createElement("span");
             validationMsg.id = "error_" + key;
             validationMsg.style.color = "red";
@@ -89,7 +111,6 @@ function generateForm(config) {
             validationMsg.style.display = "block";
             validationMsg.style.marginBottom = "5px";
 
-            // Validate and update preview on input
             input.addEventListener("input", () => {
                 validateField(key);
                 updatePreviewCard();
@@ -130,7 +151,7 @@ function validateField(key) {
     validateForm();
 }
 
-// Validate entire form and enable/disable download
+// Validate entire form
 function validateForm() {
     let allValid = true;
     fieldsToPrompt.forEach(key => {
@@ -145,31 +166,38 @@ function validateForm() {
     downloadBtn.disabled = !allValid;
 }
 
-// Update preview card with current values
+// Update preview card grouped by sections
 function updatePreviewCard() {
     const previewDiv = document.getElementById("previewCard");
     previewDiv.innerHTML = "<h3>Preview Summary</h3>";
 
-    const table = document.createElement("table");
+    for (const [groupName, keys] of Object.entries(fieldGroups)) {
+        const groupHeader = document.createElement("h4");
+        groupHeader.innerText = groupName;
+        previewDiv.appendChild(groupHeader);
 
-    fieldsToPrompt.forEach(key => {
-        const input = document.getElementById("input_" + key);
-        const row = document.createElement("tr");
+        const table = document.createElement("table");
 
-        const cellKey = document.createElement("td");
-        cellKey.innerText = key.replace(/_/g, " ");
-        const cellValue = document.createElement("td");
-        cellValue.innerText = input.value;
+        keys.forEach(key => {
+            const input = document.getElementById("input_" + key);
+            const row = document.createElement("tr");
 
-        row.appendChild(cellKey);
-        row.appendChild(cellValue);
-        table.appendChild(row);
-    });
+            const cellKey = document.createElement("td");
+            cellKey.innerText = key.replace(/_/g, " ");
 
-    previewDiv.appendChild(table);
+            const cellValue = document.createElement("td");
+            cellValue.innerText = input ? input.value : "";
+
+            row.appendChild(cellKey);
+            row.appendChild(cellValue);
+            table.appendChild(row);
+        });
+
+        previewDiv.appendChild(table);
+    }
 }
 
-// Download updated JSON while preserving formatting
+// Download updated JSON
 function downloadUpdatedConfig() {
     validateForm();
     if (document.getElementById("downloadBtn").disabled) {
@@ -177,18 +205,18 @@ function downloadUpdatedConfig() {
         return;
     }
 
-    let updatedJSONText = originalJSONText;
+    let configObj = currentConfig[0];
 
+    // Write values back into nested object
     fieldsToPrompt.forEach(key => {
         const input = document.getElementById("input_" + key);
-        if (!input) return;
-
-        const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const escapedValue = input.value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-
-        const regex = new RegExp(`("${escapedKey}"\\s*:\\s*)"[^"]*"`, "g");
-        updatedJSONText = updatedJSONText.replace(regex, `$1"${escapedValue}"`);
+        if (input) {
+            setNestedValue(configObj, fieldMap[key], input.value);
+        }
     });
+
+    // Export array with object inside
+    const updatedJSONText = JSON.stringify([configObj], null, 4);
 
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(updatedJSONText);
     const downloadAnchor = document.createElement("a");
