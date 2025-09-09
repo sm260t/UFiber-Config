@@ -1,16 +1,14 @@
-console.log("JS file loaded"); // test that it runs
+console.log("JS file loaded"); // Confirm JS is loaded
 
 function runConfig() {
-    const statusDiv = document.getElementById("status") || (() => {
-        let div = document.createElement("div");
-        div.id = "status";
-        document.body.appendChild(div);
-        return div;
-    })();
+    const statusDiv = document.getElementById("status");
+    if (!statusDiv) return;
 
-    statusDiv.innerHTML = ""; // clear previous status
+    // Clear previous messages
+    statusDiv.innerHTML = "";
 
-    let steps = [
+    // Steps of UFiber config (placeholder logic)
+    const steps = [
         "Starting UFiber configuration...",
         "Loading configuration...",
         "Applying configuration...",
@@ -18,7 +16,7 @@ function runConfig() {
     ];
 
     steps.forEach(step => {
-        let p = document.createElement("p");
+        const p = document.createElement("p");
         p.innerText = step;
         statusDiv.appendChild(p);
         console.log(step);
