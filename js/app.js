@@ -1,15 +1,13 @@
 console.log("JS file loaded");
 
-let currentConfig = {}; // Store uploaded JSON
+let currentConfig = {}; 
 
-// Fields grouped by section
 const fieldGroups = {
     "ONU Info": ["ONU_Name", "ONU_Serial"],
     "PPPoE Credentials": ["PPPoE_Username", "PPPoE_Password"],
     "Wi-Fi Settings": ["WiFi_2.4_SSID", "WiFi_2.4_Password", "WiFi_5_SSID", "WiFi_5_Password"]
 };
 
-// Flatten all keys for convenience
 const fieldsToPrompt = Object.values(fieldGroups).flat();
 
 // Load uploaded JSON
@@ -49,7 +47,7 @@ function loadUploadedConfig() {
     reader.readAsText(file);
 }
 
-// Generate grouped form
+// Generate grouped collapsible form
 function generateForm(config) {
     const formDiv = document.getElementById("configForm");
     formDiv.innerHTML = "";
@@ -60,7 +58,13 @@ function generateForm(config) {
 
         const title = document.createElement("h3");
         title.innerText = groupName;
+        title.title = "Click to collapse/expand this section";
         groupDiv.appendChild(title);
+
+        // Collapse toggle
+        title.addEventListener("click", () => {
+            groupDiv.classList.toggle("collapsed");
+        });
 
         keys.forEach(key => {
             const label = document.createElement("label");
