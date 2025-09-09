@@ -1,13 +1,16 @@
 console.log("JS file loaded");
 
-let currentConfig = {}; 
+let originalJSONText = ""; // original uploaded JSON as string
+let currentConfig = {}; // editable object
 
+// Fields grouped by section
 const fieldGroups = {
     "ONU Info": ["ONU_Name", "ONU_Serial"],
     "PPPoE Credentials": ["PPPoE_Username", "PPPoE_Password"],
     "Wi-Fi Settings": ["WiFi_2.4_SSID", "WiFi_2.4_Password", "WiFi_5_SSID", "WiFi_5_Password"]
 };
 
+// Flatten keys
 const fieldsToPrompt = Object.values(fieldGroups).flat();
 
 // Load uploaded JSON
@@ -28,7 +31,8 @@ function loadUploadedConfig() {
 
     reader.onload = function(e) {
         try {
-            currentConfig = JSON.parse(e.target.result);
+            originalJSONText = e.target.result; // keep original formatting
+            currentConfig = JSON.parse(originalJSONText);
 
             // Ensure all fields exist
             fieldsToPrompt.forEach(key => {
@@ -83,21 +87,12 @@ function generateForm(config) {
     }
 }
 
-// Download updated JSON
+// Download updated JSON while preserving original formatting
 function downloadUpdatedConfig() {
-    const updatedConfig = { ...currentConfig };
+    let updatedJSONText = originalJSONText;
 
     fieldsToPrompt.forEach(key => {
         const input = document.getElementById("input_" + key);
         if (!input) return;
-        updatedConfig[key] = input.value;
-    });
 
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(updatedConfig, null, 4));
-    const downloadAnchor = document.createElement("a");
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", "updated_config.json");
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-}
+        // Escape quotes for regex repla
