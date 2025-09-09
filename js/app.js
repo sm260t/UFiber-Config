@@ -1,8 +1,6 @@
 console.log("JS file loaded");
 
 let currentConfig = {}; // Store uploaded JSON
-
-// Fields we want to prompt the user for
 const fieldsToPrompt = [
     "ONU_Name",
     "ONU_Serial",
@@ -14,7 +12,7 @@ const fieldsToPrompt = [
     "WiFi_5_Password"
 ];
 
-// Load uploaded JSON file
+// Load uploaded JSON
 function loadUploadedConfig() {
     const fileInput = document.getElementById("jsonUpload");
     const statusDiv = document.getElementById("status");
@@ -33,6 +31,12 @@ function loadUploadedConfig() {
     reader.onload = function(e) {
         try {
             currentConfig = JSON.parse(e.target.result);
+
+            // Ensure all fields exist
+            fieldsToPrompt.forEach(key => {
+                if (!(key in currentConfig)) currentConfig[key] = "";
+            });
+
             statusDiv.innerText = "Config loaded successfully!";
             generateForm(currentConfig);
             document.getElementById("downloadBtn").style.display = "inline-block";
@@ -45,15 +49,12 @@ function loadUploadedConfig() {
     reader.readAsText(file);
 }
 
-// Generate input form only for specified fields
+// Generate form
 function generateForm(config) {
     const formDiv = document.getElementById("configForm");
     formDiv.innerHTML = "";
 
     fieldsToPrompt.forEach(key => {
-        // If the key doesn't exist in JSON, create it as empty string
-        if (!(key in config)) config[key] = "";
-
         const label = document.createElement("label");
         label.innerText = key.replace(/_/g, " ") + ": ";
         label.style.display = "block";
@@ -62,7 +63,6 @@ function generateForm(config) {
         input.type = "text";
         input.value = config[key];
         input.id = "input_" + key;
-        input.style.width = "300px";
 
         formDiv.appendChild(label);
         formDiv.appendChild(input);
@@ -71,7 +71,7 @@ function generateForm(config) {
 
 // Download updated JSON
 function downloadUpdatedConfig() {
-    const updatedConfig = { ...currentConfig }; // copy original JSON
+    const updatedConfig = { ...currentConfig };
 
     fieldsToPrompt.forEach(key => {
         const input = document.getElementById("input_" + key);
