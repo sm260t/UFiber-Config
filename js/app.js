@@ -1,5 +1,6 @@
 console.log("JS file loaded"); // Confirm JS is loaded
 
+// Run when "Run Config" button is clicked
 function runConfig() {
     const statusDiv = document.getElementById("status");
     if (!statusDiv) return;
@@ -7,18 +8,41 @@ function runConfig() {
     // Clear previous messages
     statusDiv.innerHTML = "";
 
-    // Steps of UFiber config (placeholder logic)
-    const steps = [
-        "Starting UFiber configuration...",
-        "Loading configuration...",
-        "Applying configuration...",
-        "Configuration applied successfully!"
-    ];
+    // Step 1: Starting
+    addStatus("Starting UFiber configuration...");
 
-    steps.forEach(step => {
-        const p = document.createElement("p");
-        p.innerText = step;
-        statusDiv.appendChild(p);
-        console.log(step);
-    });
+    // Step 2: Load JSON config
+    fetch("config/example.json")
+        .then(response => {
+            if (!response.ok) throw new Error("Failed to load config");
+            return response.json();
+        })
+        .then(config => {
+            addStatus("Configuration loaded successfully!");
+            console.log("Loaded config:", config);
+
+            // Step 3: Apply config (display settings for demo)
+            addStatus("Applying configuration...");
+            for (const [key, value] of Object.entries(config)) {
+                addStatus(`${key}: ${Array.isArray(value) ? value.join(", ") : value}`);
+            }
+
+            // Step 4: Finished
+            addStatus("Configuration applied successfully!");
+        })
+        .catch(err => {
+            addStatus("Error loading configuration: " + err.message);
+            console.error(err);
+        });
+}
+
+// Helper function to append messages to the page
+function addStatus(message) {
+    const statusDiv = document.getElementById("status");
+    if (!statusDiv) return;
+
+    const p = document.createElement("p");
+    p.innerText = message;
+    statusDiv.appendChild(p);
+    console.log(message);
 }
