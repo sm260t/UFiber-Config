@@ -70,6 +70,27 @@ button {
     box-sizing: border-box;
 }
 
+/* Preview card */
+.preview-card {
+    max-width: 600px;
+    margin: 10px auto 20px auto;
+    padding: 15px;
+    background-color: #e9f4ff;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+}
+
+.preview-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.preview-card th, .preview-card td {
+    text-align: left;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
 /* Status messages */
 #status {
     margin-top: 20px;
@@ -77,9 +98,14 @@ button {
     color: #006600;
 }
 
+/* Invalid input highlight */
+input.invalid {
+    border: 2px solid red;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 600px) {
-    .form-container {
+    .form-container, .preview-card {
         padding: 15px;
         width: 95%;
     }
