@@ -1,39 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conduct Connect</title>
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conduct Connect</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #121212; /* dark mode */
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+
+    header {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    header img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    header h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        color: #007bff;
+        font-size: 2rem;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        padding: 0 10px;
+        line-height: 1.2;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+        header h1 {
+            font-size: 1.5rem; /* smaller font on small screens */
+        }
+    }
+
+    main {
+        padding: 20px;
+    }
+</style>
 </head>
 <body>
     <header>
-        <h1 class="brand-title">
-            <span class="black">Conduct</span> <span class="blue">Connect</span>
-        </h1>
-        <img src="images/icon.png" alt="UFiber ONU Config" class="app-banner">
+        <img src="icon.png" alt="UFiber Banner">
+        <h1>UFiber ONU Config</h1>
     </header>
 
     <main>
-        <p>Welcome! Use this app to configure UFiber ONUs quickly and easily.</p>
-
-        <div class="upload-section">
-            <input type="file" id="jsonUpload" accept=".json">
-            <button onclick="loadUploadedConfig()">Load Config</button>
-        </div>
-
-        <!-- Preview summary card -->
-        <div id="previewCard" class="preview-card" style="display:none;"></div>
-
-        <!-- Config Form -->
-        <div id="configForm" class="form-container"></div>
-
-        <button id="downloadBtn" style="display:none; margin-top:10px;" onclick="downloadUpdatedConfig()">Download Updated Config</button>
-
-        <div id="status"></div>
+        <p>Welcome to the Conduct Connect tool.</p>
     </main>
-
-    <!-- JS -->
-    <script src="js/app.js"></script>
 </body>
 </html>
