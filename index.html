@@ -15,7 +15,6 @@
     <main>
         <p>Welcome! Use this app to configure UFiber ONUs quickly and easily.</p>
 
-        <!-- Upload JSON -->
         <div class="upload-section">
             <input type="file" id="jsonUpload" accept=".json">
             <button onclick="loadUploadedConfig()">Load Config</button>
@@ -24,10 +23,8 @@
         <!-- Config Form -->
         <div id="configForm" class="form-container"></div>
 
-        <!-- Download Button -->
-        <button id="downloadBtn" style="display:none;" onclick="downloadUpdatedConfig()">Download Updated Config</button>
+        <button id="downloadBtn" style="display:none; margin-top:10px;" onclick="downloadUpdatedConfig()">Download Updated Config</button>
 
-        <!-- Status -->
         <div id="status"></div>
     </main>
 
