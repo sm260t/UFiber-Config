@@ -1,3 +1,7 @@
 {
-  "example": "value"
+  "ONU_Name": "UFiber-001",
+  "WAN_Type": "PPPoE",
+  "IP_Address": "192.168.1.100",
+  "Subnet": "255.255.255.0",
+  "DNS": ["8.8.8.8", "8.8.4.4"]
 }
