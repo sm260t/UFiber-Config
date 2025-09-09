@@ -1,16 +1,16 @@
-// UFiber Config App JS
-
 function runConfig() {
     showStatus("Starting UFiber configuration...");
     console.log("Config started...");
-    
-    // Example placeholder for real config logic
+
+    // Example steps
     loadConfig();
     applyConfig();
 }
 
 function loadConfig() {
     console.log("Loading configuration...");
+    showStatus("Loading configuration...");
+    // Here you could fetch a JSON config file if needed
 }
 
 function applyConfig() {
