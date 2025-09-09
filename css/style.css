@@ -80,9 +80,15 @@ button {
     box-shadow: 0 1px 5px rgba(0,0,0,0.2);
 }
 
+.preview-card h4 {
+    margin-bottom: 5px;
+    color: #004080;
+}
+
 .preview-card table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 15px;
 }
 
 .preview-card th, .preview-card td {
