@@ -1,1 +1,0 @@
-// Mobile support script placeholder
