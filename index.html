@@ -1,29 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UFiber Config</title>
-    <!-- Link to CSS -->
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <header>
-        <h1>UFiber Config App</h1>
-        <img src="images/icon.png" alt="App Icon" class="app-icon">
-    </header>
+<main>
+    <p>Welcome! Use this app to configure UFiber ONUs quickly and easily.</p>
 
-    <main>
-        <p>Welcome! Use this app to configure UFiber ONUs quickly and easily.</p>
+    <!-- Upload JSON -->
+    <input type="file" id="jsonUpload" accept=".json">
+    <button onclick="loadUploadedConfig()">Load Config</button>
 
-        <!-- Button to run JS function -->
-        <button onclick="runConfig()">Run Config</button>
+    <!-- Dynamic form will appear here -->
+    <div id="configForm" style="margin-top: 20px;"></div>
 
-        <!-- Status messages will appear here -->
-        <div id="status"></div>
-    </main>
+    <!-- Button to generate updated JSON -->
+    <button id="downloadBtn" style="display:none;" onclick="downloadUpdatedConfig()">Download Updated Config</button>
 
-    <!-- Link to JS -->
-    <script src="js/app.js"></script>
-</body>
-</html>
+    <!-- Status messages -->
+    <div id="status" style="margin-top:20px; font-weight:bold;"></div>
+</main>
