@@ -26,12 +26,7 @@ button {
     margin-top: 10px;
 }
 
-#status {
-    margin-top: 20px;
-    font-weight: bold;
-    color: #006600;
-}
-
+/* Form container */
 .form-container {
     display: flex;
     flex-direction: column;
@@ -40,22 +35,27 @@ button {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    max-width: 500px;
+    max-width: 600px;
     margin: auto;
 }
 
 /* Field groups */
 .field-group {
-    border: 1px solid #ddd;
-    padding: 15px;
     border-radius: 8px;
+    padding: 15px;
     background-color: #fafafa;
+    border-left: 6px solid #0055aa;
 }
 
 .field-group h3 {
     margin-top: 0;
     margin-bottom: 10px;
     color: #0055aa;
+    cursor: pointer;
+}
+
+.field-group.collapsed input {
+    display: none;
 }
 
 .field-group label {
@@ -68,4 +68,28 @@ button {
     padding: 8px;
     margin-bottom: 10px;
     box-sizing: border-box;
+}
+
+/* Status messages */
+#status {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #006600;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 15px;
+        width: 95%;
+    }
+
+    button {
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .field-group input {
+        width: 100%;
+    }
 }
