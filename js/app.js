@@ -1,16 +1,16 @@
 console.log("JS file loaded");
 
 let currentConfig = {}; // Store uploaded JSON
-const fieldsToPrompt = [
-    "ONU_Name",
-    "ONU_Serial",
-    "PPPoE_Username",
-    "PPPoE_Password",
-    "WiFi_2.4_SSID",
-    "WiFi_2.4_Password",
-    "WiFi_5_SSID",
-    "WiFi_5_Password"
-];
+
+// Fields grouped by section
+const fieldGroups = {
+    "ONU Info": ["ONU_Name", "ONU_Serial"],
+    "PPPoE Credentials": ["PPPoE_Username", "PPPoE_Password"],
+    "Wi-Fi Settings": ["WiFi_2.4_SSID", "WiFi_2.4_Password", "WiFi_5_SSID", "WiFi_5_Password"]
+};
+
+// Flatten all keys for convenience
+const fieldsToPrompt = Object.values(fieldGroups).flat();
 
 // Load uploaded JSON
 function loadUploadedConfig() {
@@ -49,24 +49,34 @@ function loadUploadedConfig() {
     reader.readAsText(file);
 }
 
-// Generate form
+// Generate grouped form
 function generateForm(config) {
     const formDiv = document.getElementById("configForm");
     formDiv.innerHTML = "";
 
-    fieldsToPrompt.forEach(key => {
-        const label = document.createElement("label");
-        label.innerText = key.replace(/_/g, " ") + ": ";
-        label.style.display = "block";
+    for (const [groupName, keys] of Object.entries(fieldGroups)) {
+        const groupDiv = document.createElement("div");
+        groupDiv.className = "field-group";
 
-        const input = document.createElement("input");
-        input.type = "text";
-        input.value = config[key];
-        input.id = "input_" + key;
+        const title = document.createElement("h3");
+        title.innerText = groupName;
+        groupDiv.appendChild(title);
 
-        formDiv.appendChild(label);
-        formDiv.appendChild(input);
-    });
+        keys.forEach(key => {
+            const label = document.createElement("label");
+            label.innerText = key.replace(/_/g, " ") + ":";
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = config[key];
+            input.id = "input_" + key;
+
+            groupDiv.appendChild(label);
+            groupDiv.appendChild(input);
+        });
+
+        formDiv.appendChild(groupDiv);
+    }
 }
 
 // Download updated JSON
