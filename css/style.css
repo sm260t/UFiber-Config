@@ -10,22 +10,8 @@ header {
     margin-bottom: 30px;
 }
 
-.brand-title {
-    font-size: 2.5em;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.brand-title .black {
-    color: #000;
-}
-
-.brand-title .blue {
-    color: #0055aa;
-}
-
-.app-banner {
-    width: 250px;
+.app-icon {
+    width: 100px;
     margin-top: 10px;
 }
 
